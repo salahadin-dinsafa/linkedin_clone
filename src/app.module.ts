@@ -1,18 +1,27 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
+import { APP_PIPE } from '@nestjs/core';
 
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AppController } from './app.controller';
 import { ormConfig } from './common/db/ormconfig.datasource';
 
 @Module({
   imports: [
     // todo: joi config
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRootAsync({ useFactory: ormConfig })
+    TypeOrmModule.forRootAsync({ useFactory: ormConfig }),
   ],
-  controllers: [AppController],
-  providers: []
+  providers: [
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        forbidNonWhitelisted: true,
+        transformOptions: { enableImplicitConversion: true }
+      })
+    }
+  ]
 })
 export class AppModule { }
