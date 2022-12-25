@@ -2,6 +2,8 @@ import { DataSource } from "typeorm";
 import {
     PostgresConnectionOptions
 } from "typeorm/driver/postgres/PostgresConnectionOptions";
+import { config } from 'dotenv'
+config();
 
 export const ormConfig = (): PostgresConnectionOptions => ({
     type: 'postgres',
