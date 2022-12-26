@@ -21,7 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d src/common/db/ormconfig.datasource.ts",
     "db:drop": "yarn typeorm schema:drop",
-    "db:create": "yarn typeorm migration:generate src/common/db/migrations/UserImageProperty",
+    "db:create": "yarn typeorm migration:generate src/common/db/migrations/CreateFriendRequest",
     "db:revert": "yarn typeorm migration:revert",
     "db:migrate": "yarn typeorm migration:run",
     "db:seed": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d src/common/db/seed.datasource.ts migration:run"

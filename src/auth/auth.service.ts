@@ -32,7 +32,11 @@ export class AuthService {
                 ...signup,
                 password: hashSync(signup.password, 15),
             })
-            return await this.userRepository.save(user);
+            return await this.userRepository.save(user)
+                .then(user => {
+                    delete user.password;
+                    return user;
+                });
         } catch (error) {
             throw new UnprocessableEntityException(`${error.message}`)
         }

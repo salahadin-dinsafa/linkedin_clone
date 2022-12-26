@@ -2,6 +2,7 @@ import { FeedEntity } from "src/feeds/entities/feed.entity";
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 import { Roles } from "../types/roles.enum";
+import { FriendEntity } from "./friend.entity";
 
 @Entity({ name: 'users' })
 export class UserEntity extends BaseEntity {
@@ -20,7 +21,7 @@ export class UserEntity extends BaseEntity {
     @Column()
     password: string;
 
-    @Column({default: ''})
+    @Column({ default: '' })
     imagePath: string;
 
     @Column({ type: 'enum', enum: Roles, default: Roles.USER })
@@ -28,4 +29,10 @@ export class UserEntity extends BaseEntity {
 
     @OneToMany(() => FeedEntity, feedEntity => feedEntity.author, { eager: false, cascade: ['remove'] })
     posts: FeedEntity[]
+
+    @OneToMany(() => FriendEntity, friendEntity => friendEntity.sender)
+    sentFriendRequest: FriendEntity[];
+
+    @OneToMany(() => FriendEntity, friendEntity => friendEntity.reciver)
+    recivedFriendRequest: FriendEntity[];
 }

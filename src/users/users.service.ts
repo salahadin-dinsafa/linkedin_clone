@@ -3,17 +3,21 @@ import { NotFoundException } from "@nestjs/common/exceptions";
 
 import { InjectRepository } from "@nestjs/typeorm";
 import { join } from "path";
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 
 import { UserEntity } from "../users/entities/user.entity";
+import { FriendEntity } from "./entities/friend.entity";
 import { isFileExtensionSafe, removeFile } from "./helpers/image.storage";
+import { Status } from "./types/status.enum";
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(UserEntity)
-        private readonly userRepository: Repository<UserEntity>,
+        private readonly userRepository: Repository<UserEntity>
     ) { }
+    // todo: when user deleted image mustbe deleted together
+
     async findById(id: number): Promise<UserEntity> {
         let user: UserEntity;
         try {

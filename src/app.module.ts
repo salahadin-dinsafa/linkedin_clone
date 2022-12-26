@@ -14,9 +14,9 @@ import { UsersModule } from './users/users.module';
     // todo: joi config
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({ useFactory: ormConfig }),
-    FeedModule,
     AuthModule,
     UsersModule,
+    FeedModule,
   ],
   providers: [
     {
