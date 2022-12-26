@@ -16,10 +16,10 @@ import { FeedPostDto } from './dto/feed-post.dto';
 import { PaginationDto } from './dto/pagination.dto';
 import { FeedEntity } from './entities/feed.entity';
 import { FeedsService } from './feeds.service';
-import { IsOwnerGuard } from './owner.decorator';
+import { IsOwnerGuard } from './decorators/owner.decorator';
 
 @Controller('feed')
-@UseGuards(AuthGuard(), RolesGuard)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class FeedsController {
     constructor(private readonly feedService: FeedsService) { }
 

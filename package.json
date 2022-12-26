@@ -21,7 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d src/common/db/ormconfig.datasource.ts",
     "db:drop": "yarn typeorm schema:drop",
-    "db:create": "yarn typeorm migration:generate src/common/db/migrations/RelationOfUserToFeed",
+    "db:create": "yarn typeorm migration:generate src/common/db/migrations/UserImageProperty",
     "db:revert": "yarn typeorm migration:revert",
     "db:migrate": "yarn typeorm migration:run",
     "db:seed": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d src/common/db/seed.datasource.ts migration:run"
@@ -54,8 +54,7 @@
     "rxjs": "^7.2.0",
     "socket.io": "^4.5.3",
     "swagger-ui-express": "^4.6.0",
-    "typeorm": "^0.3.10",
-    "uuid": "^9.0.0"
+    "typeorm": "^0.3.10"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

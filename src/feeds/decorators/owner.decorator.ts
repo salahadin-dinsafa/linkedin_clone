@@ -1,16 +1,16 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 
-import { Roles } from "../users/types/roles.enum";
-import { AuthService } from "../auth/auth.service";
-import { UserEntity } from "../users/entities/user.entity";
-import { FeedEntity } from "./entities/feed.entity";
-import { FeedsService } from "./feeds.service";
+import { Roles } from "../../users/types/roles.enum";
+import { UserEntity } from "../../users/entities/user.entity";
+import { FeedEntity } from "../entities/feed.entity";
+import { FeedsService } from "../feeds.service";
+import { UsersService } from "../../users/users.service";
 
 @Injectable()
 export class IsOwnerGuard implements CanActivate {
 
     constructor(
-        private readonly authService: AuthService,
+        private readonly userService: UsersService,
         private readonly feedService: FeedsService
     ) { }
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -24,13 +24,13 @@ export class IsOwnerGuard implements CanActivate {
         const postId: number = params.id;
 
         const currentUser: UserEntity =
-            await this.authService.findById(userId);
+            await this.userService.findById(userId);
         if (!currentUser) return false;
 
         const post: FeedEntity =
             await this.feedService.findById(postId);
         if (!post) return false;
-        
+
         return post.author.id === currentUser.id;
     }
 

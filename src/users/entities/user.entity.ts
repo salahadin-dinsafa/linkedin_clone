@@ -20,6 +20,9 @@ export class UserEntity extends BaseEntity {
     @Column()
     password: string;
 
+    @Column({default: ''})
+    imagePath: string;
+
     @Column({ type: 'enum', enum: Roles, default: Roles.USER })
     role: Roles
 

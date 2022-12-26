@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { compareSync, hashSync } from 'bcryptjs';
 import { Repository } from 'typeorm';
 
+import { UsersService } from '../users/users.service';
 import { UserEntity } from '../users/entities/user.entity';
 import { LoginType } from './types/login.type';
 import { Payload } from './types/payload.type';
@@ -18,31 +19,12 @@ export class AuthService {
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepository: Repository<UserEntity>,
+        private readonly userService: UsersService,
         private readonly jwtService: JwtService
     ) { }
-    async findById(id: number): Promise<UserEntity> {
-        let user: UserEntity;
-        try {
-            user = await this.userRepository.findOne({ where: { id } });
-        } catch (error) {
-            throw new UnprocessableEntityException(`${error.message}`)
-        }
-        return user;
-    }
-
-    async findByEmail(email: string): Promise<UserEntity> {
-        let user: UserEntity;
-        try {
-            user = await this.userRepository.findOne({ where: { email } });
-        } catch (error) {
-
-            throw new UnprocessableEntityException(`${error.message}`)
-        }
-        return user;
-    }
 
     async signup(signup: SignupType): Promise<UserEntity> {
-        let user: UserEntity = await this.findByEmail(signup.email);
+        let user: UserEntity = await this.userService.findByEmail(signup.email);
         if (user)
             throw new UnprocessableEntityException(`User with #Email: ${signup.email} already exsit`);
         try {
@@ -57,7 +39,7 @@ export class AuthService {
     }
 
     async login(login: LoginType): Promise<{ token: string }> {
-        let user: UserEntity = await this.findByEmail(login.email);
+        let user: UserEntity = await this.userService.findByEmail(login.email);
         if (!user)
             throw new UnauthorizedException('Invalid Creadential');
         const isValidPass: boolean = compareSync(login.password, user.password);

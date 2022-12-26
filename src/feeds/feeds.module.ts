@@ -5,13 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FeedsService } from './feeds.service';
 import { FeedsController } from './feeds.controller';
 import { FeedEntity } from './entities/feed.entity';
-import { AuthModule } from '../auth/auth.module';
-import { IsOwnerGuard } from './owner.decorator';
+import { IsOwnerGuard } from './decorators/owner.decorator';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([FeedEntity]),
-    AuthModule
+    UsersModule
   ],
   providers: [FeedsService, IsOwnerGuard],
   controllers: [FeedsController]
