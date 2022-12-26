@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ormConfig } from './common/db/ormconfig.datasource';
 import { FeedModule } from './feeds/feeds.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { FeedModule } from './feeds/feeds.module';
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({ useFactory: ormConfig }),
     FeedModule,
+    AuthModule,
+    UsersModule,
   ],
   providers: [
     {
