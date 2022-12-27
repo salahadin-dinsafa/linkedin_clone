@@ -1,7 +1,7 @@
 import {
-    Controller, Get,
-    ParseIntPipe,
-    Post, UseGuards, UseInterceptors
+    Controller, Get, ParseIntPipe,
+    Post, UseGuards, UseInterceptors,
+    Logger
 } from '@nestjs/common';
 import { Param, Res, UploadedFile } from '@nestjs/common/decorators/http/route-params.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -32,6 +32,7 @@ import {
 @ApiUnprocessableEntityResponse({ type: CustomeHttpExceptionResponseObject, description: 'Unprocessable action' })
 @UseGuards(AuthGuard('jwt'))
 export class UsersController {
+    logger = new Logger('UsersController');
     constructor(private readonly userService: UsersService) { }
 
     @ApiNotFoundResponse({ type: CustomeHttpExceptionResponseObject, description: 'User or Image not found' })
@@ -43,6 +44,7 @@ export class UsersController {
         @GetUser('id') userId: number,
         @Res() res: Response
     ): Promise<any> {
+        this.logger.verbose(`User retriveing Image`)
         const imagePath: string = await this.userService.findImage(userId);
         return res.sendFile(imagePath, { root: './images' })
     }
@@ -54,6 +56,7 @@ export class UsersController {
     @Get(':userId')
     findUserById(
         @Param('userId', ParseIntPipe) userId: number): Promise<UserEntity> {
+        this.logger.verbose(`Finding uses with #ID: ${userId}`)
         return this.userService.getUser(userId);
     }
 
@@ -66,6 +69,7 @@ export class UsersController {
         @GetUser('id') userId: number,
         @UploadedFile() file: Express.Multer.File
     ): Promise<UserEntity> {
+        this.logger.verbose(`Updating image with #File: ${JSON.stringify(file)}`)
         return this.userService.updateImage(userId, file)
     }
 

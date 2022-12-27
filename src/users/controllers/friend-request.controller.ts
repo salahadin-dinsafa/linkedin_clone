@@ -1,6 +1,7 @@
 import {
     Controller, Post, Param, Patch,
-    ParseIntPipe, Get, UseGuards, Body
+    ParseIntPipe, Get, UseGuards, Body,
+    Logger
 } from "@nestjs/common";
 
 import { ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse, ApiUnprocessableEntityResponse } from "@nestjs/swagger";
@@ -25,6 +26,7 @@ import { AllFriendRequestsResponse, FriendRequestResponse } from "../types/frien
 @ApiNotFoundResponse({ type: CustomeHttpExceptionResponseObject, description: 'User not found' })
 @UseGuards(AuthGuard('jwt'))
 export class FriendRequestController {
+    logger = new Logger('FriendRequestController');
     constructor(private readonly friendRequestService: FriendRequestService) { }
 
     @ApiCreatedResponse({ type: FriendRequestResponse, description: 'Friend Request Sent' })
@@ -34,6 +36,7 @@ export class FriendRequestController {
     sendFriendRequest(
         @GetUser('id') currentUserId: number,
         @Param('userId', ParseIntPipe) userId: number): Promise<FriendEntity> {
+        this.logger.verbose(`User with #id: ${currentUserId} sending request to user with #Id: ${userId}`)
         return this.friendRequestService.sendFriendRequest(currentUserId, userId);
     }
 
@@ -46,6 +49,7 @@ export class FriendRequestController {
         @Param('userId', ParseIntPipe) userId: number,
         @Body() statusDto: StatusDto
     ): Promise<FriendEntity> {
+        this.logger.verbose(`Response friend request with #Status: ${JSON.stringify(statusDto)}`)
         return this.friendRequestService.requestResponse(currentUserId, userId, statusDto);
     }
 
@@ -55,6 +59,7 @@ export class FriendRequestController {
     @Get('requests')
     friendRequests(
         @GetUser('id') userId: number): Promise<FriendEntity[]> {
+        this.logger.verbose(`Getting all requests`)
         return this.friendRequestService.friendRequests(userId);
     }
 
@@ -66,6 +71,7 @@ export class FriendRequestController {
         @GetUser('id') currentUserId: number,
         @Param('userId', ParseIntPipe) userId: number
     ): Promise<{ status: Status }> {
+        this.logger.verbose(`Getting request status of user with #Id: ${userId}`)
         return this.friendRequestService.findRequestStatus(currentUserId, userId);
     }
 

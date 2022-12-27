@@ -1,6 +1,7 @@
 import {
     Injectable, UnauthorizedException,
-    UnprocessableEntityException
+    UnprocessableEntityException,
+    Logger
 } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
@@ -16,6 +17,7 @@ import { SignupType } from './types/signup.type';
 
 @Injectable()
 export class AuthService {
+    logger = new Logger('AuthService');
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepository: Repository<UserEntity>,
@@ -50,6 +52,7 @@ export class AuthService {
         if (!isValidPass)
             throw new UnauthorizedException('Invalid Creadential');
         const payload: Payload = { email: user.email };
+        this.logger.verbose(`Generating Jwt`)
         const token: string = await
             this.jwtService.signAsync(payload, { secret: process.env.JWT_SECRET });
         return { token };

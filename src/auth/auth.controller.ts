@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Logger } from '@nestjs/common';
 
 import {
     ApiCreatedResponse, ApiOperation,
@@ -18,6 +18,7 @@ import { Token } from './types/login.type';
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
+    logger = new Logger('AuthController');
     constructor(private readonly authService: AuthService) { }
 
     @ApiUnprocessableEntityResponse({ type: CustomeHttpExceptionResponseObject, description: 'Not successful' })
@@ -25,6 +26,7 @@ export class AuthController {
     @ApiOperation({ summary: 'User Signup', description: 'User Registeration' })
     @Post('signup')
     signup(@Body() signupDto: SignupDto): Promise<UserEntity> {
+        this.logger.verbose(`User Signup with #Dto: ${JSON.stringify(signupDto)}`)
         return this.authService.signup(signupDto);
     }
 
@@ -33,6 +35,7 @@ export class AuthController {
     @ApiOperation({ summary: 'User Login', description: 'User login' })
     @Post('login')
     login(@Body() loginDto: LoginDto): Promise<{ token: string }> {
+        this.logger.verbose(`User loging with #Dto: ${JSON.stringify(loginDto)}`)
         return this.authService.login(loginDto);
     }
 

@@ -1,13 +1,16 @@
 import {
-    Body, Controller,
+    Body, Controller, UseGuards,
     Delete, Get, Param, Query,
-    ParseIntPipe, Patch, Post
+    ParseIntPipe, Patch, Post,
+    Logger
 } from '@nestjs/common';
-import { UseGuards } from '@nestjs/common/decorators';
+
 import { AuthGuard } from '@nestjs/passport/dist';
-
-
-import { ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
+import {
+    ApiCreatedResponse, ApiForbiddenResponse,
+    ApiNotFoundResponse, ApiOkResponse, ApiOperation,
+    ApiTags, ApiUnauthorizedResponse, ApiUnprocessableEntityResponse
+} from '@nestjs/swagger';
 
 import { Role } from '../auth/decorators/role.decorator';
 import { Roles } from '../users/types/roles.enum';
@@ -30,6 +33,7 @@ import { FeedResponse } from './types/feed-post.type';
 @Controller('feed')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 export class FeedsController {
+    logger = new Logger('FeedService');
     constructor(private readonly feedService: FeedsService) { }
 
     @ApiCreatedResponse({ type: FeedResponse, description: 'Post created' })
@@ -40,6 +44,7 @@ export class FeedsController {
         @GetUser() user: UserEntity,
         @Body() feedPostDto: FeedPostDto
     ): Promise<FeedEntity> {
+        this.logger.verbose(`Creating post with #Dto: ${JSON.stringify(feedPostDto)}`)
         return this.feedService.createPost(user, feedPostDto);
     }
 
@@ -49,6 +54,7 @@ export class FeedsController {
     @Role(Roles.ADMIN, Roles.PRIMIUM, Roles.USER)
     @Get(':id')
     getPost(@Param('id', ParseIntPipe) id: number): Promise<FeedEntity> {
+        this.logger.verbose(`Getting post with #Id: ${id}`)
         return this.feedService.getPost(id);
     }
 
@@ -57,6 +63,7 @@ export class FeedsController {
     @Role(Roles.ADMIN, Roles.PRIMIUM, Roles.USER)
     @Get()
     getPosts(@Query() paginationDto: PaginationDto): Promise<FeedEntity[]> {
+        this.logger.verbose(`Getting posts`)
         return this.feedService.getPosts(paginationDto);
     }
 
@@ -70,6 +77,7 @@ export class FeedsController {
     updatePost(
         @Body() updatePostDto: FeedPostDto,
         @Param('id', ParseIntPipe) id: number): Promise<FeedEntity> {
+        this.logger.verbose(`Updating post with #Dto: ${JSON.stringify(updatePostDto)}`)
         return this.feedService.updatePost(id, updatePostDto);
     }
 
@@ -80,6 +88,7 @@ export class FeedsController {
     @UseGuards(IsOwnerGuard, IsOwnerGuard)
     @Delete(':id')
     removePost(@Param('id', ParseIntPipe) id: number): Promise<void> {
+        this.logger.verbose(`Deleting post with #Id: ${id}`)
         return this.feedService.removePost(id);
     }
 }
