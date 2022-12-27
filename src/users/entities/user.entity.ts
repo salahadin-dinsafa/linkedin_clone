@@ -1,10 +1,10 @@
-import { FeedEntity } from "src/feeds/entities/feed.entity";
+import { FeedEntity } from "../../feeds/entities/feed.entity";
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 import { Roles } from "../types/roles.enum";
 import { FriendEntity } from "./friend.entity";
 
-@Entity({ name: 'users' })
+@Entity({ name: 'linkedin_users' })
 export class UserEntity extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;

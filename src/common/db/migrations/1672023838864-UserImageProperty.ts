@@ -4,11 +4,11 @@ export class UserImageProperty1672023838864 implements MigrationInterface {
     name = 'UserImageProperty1672023838864'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "users" ADD "imagePath" character varying NOT NULL DEFAULT ''`);
+        await queryRunner.query(`ALTER TABLE "linkedin_users" ADD "imagePath" character varying NOT NULL DEFAULT ''`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "imagePath"`);
+        await queryRunner.query(`ALTER TABLE "linkedin_users" DROP COLUMN "imagePath"`);
     }
 
 }
